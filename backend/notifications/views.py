@@ -18,6 +18,7 @@ from .mixins import WorkspaceScopedMixin
 from .models import InAppNotification, Notification, Subscriber, Topic
 from .pagination import InAppFeedPagination
 from .serializers import (
+    DeviceSerializer,
     InAppNotificationSerializer,
     InAppUnreadCountResponseSerializer,
     NotificationDetailSerializer,
@@ -30,6 +31,7 @@ from .serializers import (
     SendTopicNotificationResponseSerializer,
     SendTopicNotificationSerializer,
     SessionRequestSerializer,
+    SessionResponseSerializer,
     SubscriberDetailSerializer,
     SubscriberSerializer,
     SubscriberTopicSubscriptionSerializer,

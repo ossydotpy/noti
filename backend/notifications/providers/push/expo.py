@@ -109,7 +109,7 @@ class ExpoProvider(BaseProvider):
             headers["Authorization"] = f"Bearer {access_token}"
 
         url = EXPO_PUSH_API_URL
-        if config.get("use_fcm_v1"):
+        if config.get("use_fcm_v1", True):
             url += "?useFcmV1=true"
 
         response = client.post(url, json=payload, headers=headers, timeout=REQUEST_TIMEOUT)

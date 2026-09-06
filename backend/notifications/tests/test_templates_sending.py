@@ -3,7 +3,7 @@ from unittest.mock import patch
 from django.urls import reverse
 from rest_framework import status
 
-from notifications.models import Provider, Subscriber, Template
+from notifications.models import Notification, Provider, Subscriber, Template
 from notifications.tests.base import BaseNotificationTest
 
 

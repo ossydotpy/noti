@@ -69,13 +69,18 @@ class ProviderApiTest(APITestCase):
             workspace=self.workspace,
             provider_type="fcm",
             name="My FCM",
-            config={"project_id": "test", "private_key": "test"},
+            config={
+                "project_id": "test",
+                "private_key": "test",
+                "client_email": "test@test.iam.gserviceaccount.com",
+            },
         )
         data = {"provider_type": "fcm", "name": "Renamed FCM", "config": {"project_id": "x"}}
         response = self.client.post(reverse("dashboard-provider-list"), data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         provider.refresh_from_db()
         self.assertEqual(provider.name, "Renamed FCM")
+        self.assertEqual(provider.config["client_email"], "test@test.iam.gserviceaccount.com")
         self.assertEqual(Provider.objects.filter(provider_type="fcm").count(), 1)
 
     def test_update_provider_preserving_secrets(self):

@@ -309,4 +309,4 @@ LOGGING = {
 
 from config.observability import setup_otel  # noqa: E402
 
-setup_otel()
+setup_otel(enabled=OTEL_ENABLED)

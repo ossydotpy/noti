@@ -1,3 +1,4 @@
+import time
 from unittest.mock import MagicMock, patch
 
 import redis
@@ -38,7 +39,8 @@ class GlobalApiThrottleTest(SimpleTestCase):
         self.assertEqual(args[2], "throttle:api:ws-1")
         self.assertEqual(args[3], 10)
         self.assertEqual(args[4], 5.0)
-        self.assertEqual(args[5], 1)
+        self.assertAlmostEqual(args[5], time.time(), delta=5)
+        self.assertEqual(args[6], 1)
 
     @patch("notifications.throttling._redis_connection")
     def test_rate_limit_exceeded(self, mock_conn):
@@ -90,8 +92,11 @@ class ScopedAnonThrottleTest(SimpleTestCase):
     @staticmethod
     def _request(ip="1.2.3.4", authenticated=False):
         request = MagicMock()
-        request.user = MagicMock() if authenticated else AnonymousUser()
-        request.user.is_authenticated = authenticated
+        if authenticated:
+            request.user = MagicMock()
+            request.user.is_authenticated = True
+        else:
+            request.user = AnonymousUser()
         request.META = {"REMOTE_ADDR": ip}
         return request
 

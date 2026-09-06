@@ -2,7 +2,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from core.models import AuditLog
+from core.models import AuditLog, WorkspaceMember
 from dashboard.tests.utils import auth_client, make_user, make_workspace
 
 

@@ -8,8 +8,6 @@ apply (protocol, resource attributes, exporters).
 import logging
 import os
 
-from django.conf import settings
-
 PII_ATTRIBUTE_KEYS = frozenset(
     {
         "email",
@@ -62,8 +60,8 @@ def mask_pii_processor(span, log_record=None):
     return span, log_record
 
 
-def setup_otel():
-    if not settings.OTEL_ENABLED:
+def setup_otel(enabled: bool = False):
+    if not enabled:
         return
     if os.environ.get("OTEL_SDK_DISABLED", "").lower() in {"true", "1"}:
         return
@@ -81,7 +79,7 @@ def setup_otel():
         {
             "service.name": os.environ.get("OTEL_SERVICE_NAME", "noti-backend"),
             "service.version": "1.0.0",
-            "deployment.environment": settings.DJANGO_ENV,
+            "deployment.environment": os.environ.get("DJANGO_ENV", "dev"),
         }
     )
 

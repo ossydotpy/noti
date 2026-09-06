@@ -39,13 +39,10 @@ class ProviderSerializer(serializers.ModelSerializer):
             )
 
         if config is not None:
-            if self.instance and self.instance.config:
-                for key, value in config.items():
-                    if value == "********" and key in self.instance.config:
-                        config[key] = self.instance.config[key]
-
+            incoming = {k: v for k, v in config.items() if v != "********"}
+            merged = {**(self.instance.config if self.instance else {}), **incoming}
             try:
-                attrs["config"] = provider_cls.validate_config(config)
+                attrs["config"] = provider_cls.validate_config(merged)
             except Exception as e:
                 raise serializers.ValidationError({"config": str(e)})
 
