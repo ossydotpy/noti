@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+db.sqlite3
+*.log
+
+# Django
+backend/.env
+backend/staticfiles/
+backend/media/
+
+# Node
+node_modules/
+dist/
+.vinxi/
+.output/
+.tanstack/
+*.tsbuildinfo
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# Editors / OS
+.idea/
+.vscode/
+.DS_Store
