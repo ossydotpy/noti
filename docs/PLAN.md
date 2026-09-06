@@ -15,6 +15,8 @@ ported and adapted piece by piece.** The legacy workspace is read-only reference
 | Billing | Removed entirely (Paystack, credits, quotas, plan limits) |
 | Workspaces | Simplified: owner/admin/member roles, token invites, no plans/states; real `User` FKs |
 | Ops stack | OTel traces+logs over OTLP (env-gated, off by default); prometheus/grafana/loki/structlog wide-events dropped |
+| Python tooling | `uv` (pyproject.toml + uv.lock) instead of pip/requirements.txt |
+| Django admin | Removed — pure API backend, no admin site |
 | Email | Django SMTP backend (ZeptoMail dropped) |
 | Migrations | Fresh 0001 for all apps |
 | Web framework | TanStack Start, **SPA mode** (`ssr: false`), pnpm (not Bun) |
