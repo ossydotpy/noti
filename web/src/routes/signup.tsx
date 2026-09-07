@@ -86,7 +86,7 @@ function SignupClient() {
         } catch (err) {
             setError(
                 err instanceof ApiError
-                    ? err.message || "Something went wrong"
+                    ? err.fieldError || err.message || "Something went wrong"
                     : "Something went wrong"
             );
             setLoading(false);

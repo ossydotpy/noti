@@ -5,19 +5,30 @@ export const API_URL = (import.meta.env.VITE_API_URL ?? "http://localhost:8000/a
   "",
 )
 
+function extractMessage(payload: unknown): string | undefined {
+  if (payload == null || typeof payload !== "object") return undefined
+  const data = payload as Record<string, unknown>
+  const error = data.error
+  if (
+    error &&
+    typeof error === "object" &&
+    typeof (error as { message?: unknown }).message === "string"
+  ) {
+    return (error as { message: string }).message
+  }
+  if (typeof data.detail === "string") return data.detail
+  const nonField = data.non_field_errors
+  if (typeof nonField === "string") return nonField
+  if (Array.isArray(nonField) && typeof nonField[0] === "string") return nonField[0]
+  return undefined
+}
+
 export class ApiError extends Error {
   status: number
   payload: unknown
 
   constructor(status: number, payload: unknown) {
-    const message =
-      typeof payload === "object" &&
-      payload !== null &&
-      "error" in payload &&
-      typeof (payload as { error?: { message?: string } }).error?.message === "string"
-        ? (payload as { error: { message: string } }).error.message
-        : `Request failed with status ${status}`
-    super(message)
+    super(extractMessage(payload) ?? `Request failed with status ${status}`)
     this.name = "ApiError"
     this.status = status
     this.payload = payload

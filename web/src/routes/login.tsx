@@ -90,11 +90,13 @@ function LoginClient() {
             await auth.signIn(email, password);
             router.history.push(await resolvePostLoginPath(redirectTo));
         } catch (err) {
-            setError(
-                err instanceof ApiError
-                    ? err.message || "Something went wrong"
-                    : "Something went wrong"
-            );
+            if (err instanceof ApiError && err.status === 401) {
+                setError("Invalid email or password.");
+            } else if (err instanceof ApiError) {
+                setError(err.message || "Something went wrong");
+            } else {
+                setError("Something went wrong");
+            }
             setLoading(false);
         }
     };
