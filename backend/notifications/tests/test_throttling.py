@@ -27,8 +27,9 @@ class GlobalApiThrottleTest(SimpleTestCase):
         request = MagicMock(spec=[])
         self.assertTrue(self.throttle.allow_request(request, None))
 
+    @patch("notifications.throttling._redis_cache_configured", return_value=True)
     @patch("notifications.throttling._redis_connection")
-    def test_allow_request_calls_token_bucket_script(self, mock_conn):
+    def test_allow_request_calls_token_bucket_script(self, mock_conn, _cfg):
         mock_conn.return_value.eval.return_value = [1, 4.0]
         request = MagicMock()
         request.workspace = MagicMock(id="ws-1")
@@ -42,16 +43,18 @@ class GlobalApiThrottleTest(SimpleTestCase):
         self.assertAlmostEqual(args[5], time.time(), delta=5)
         self.assertEqual(args[6], 1)
 
+    @patch("notifications.throttling._redis_cache_configured", return_value=True)
     @patch("notifications.throttling._redis_connection")
-    def test_rate_limit_exceeded(self, mock_conn):
+    def test_rate_limit_exceeded(self, mock_conn, _cfg):
         mock_conn.return_value.eval.return_value = [0, 0.0]
         request = MagicMock()
         request.workspace = MagicMock(id="ws-1")
 
         self.assertFalse(self.throttle.allow_request(request, None))
 
+    @patch("notifications.throttling._redis_cache_configured", return_value=True)
     @patch("notifications.throttling._redis_connection")
-    def test_fail_open_on_redis_error(self, mock_conn):
+    def test_fail_open_on_redis_error(self, mock_conn, _cfg):
         mock_conn.side_effect = redis.RedisError("Connection failed")
         request = MagicMock()
         request.workspace = MagicMock(id="ws-1")

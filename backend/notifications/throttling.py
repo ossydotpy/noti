@@ -42,6 +42,11 @@ return {allowed, tokens}
 """
 
 
+def _redis_cache_configured() -> bool:
+    backend = settings.CACHES.get("default", {}).get("BACKEND", "")
+    return "redis" in backend.lower()
+
+
 def _redis_connection():
     from django_redis import get_redis_connection
 
@@ -53,7 +58,8 @@ class GlobalApiThrottle(BaseThrottle):
 
     Rates come from settings (``API_RATE_LIMIT`` / ``API_BURST_CAPACITY``).
     Requests without a resolved workspace (anon / JWT dashboard) pass through.
-    Fails open when Redis is unavailable.
+    Skipped when the cache backend is not Redis (dev); fails open when Redis
+    is unavailable.
     """
 
     scope = "api"
@@ -65,6 +71,9 @@ class GlobalApiThrottle(BaseThrottle):
     def allow_request(self, request, view):
         workspace = getattr(request, "workspace", None)
         if not workspace:
+            return True
+
+        if not _redis_cache_configured():
             return True
 
         key = f"throttle:{self.scope}:{str(workspace.id)}"
