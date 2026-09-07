@@ -8,6 +8,7 @@ import {
 import { Toaster } from "sonner"
 
 import type { RouterContext } from "@/router"
+import { ThemeProvider, themeInitScript } from "@/hooks/use-theme"
 import "@/styles.css"
 
 export const Route = createRootRouteWithContext<RouterContext>()({
@@ -24,10 +25,12 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 
 function RootComponent() {
   return (
-    <RootDocument>
-      <Outlet />
-      <Toaster richColors position="top-right" />
-    </RootDocument>
+    <ThemeProvider>
+      <RootDocument>
+        <Outlet />
+        <Toaster richColors position="top-right" />
+      </RootDocument>
+    </ThemeProvider>
   )
 }
 
@@ -35,6 +38,7 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <HeadContent />
       </head>
       <body className="antialiased">

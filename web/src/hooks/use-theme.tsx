@@ -10,33 +10,31 @@ interface ThemeContextType {
 
 const ThemeContext = React.createContext<ThemeContextType | undefined>(undefined);
 
-export function ThemeProvider({ children }: { children: React.ReactNode }) {
-    const [theme, setThemeState] = React.useState<Theme>("light");
+function currentTheme(): Theme {
+    if (typeof document === "undefined") return "light";
+    return document.documentElement.classList.contains("dark") ? "dark" : "light";
+}
 
-    React.useEffect(() => {
-        const stored = localStorage.getItem("theme") as Theme | null;
-        if (stored) {
-            setThemeState(stored);
-            document.documentElement.classList.toggle("dark", stored === "dark");
-        } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-            setThemeState("dark");
-            document.documentElement.classList.add("dark");
-        }
+function applyTheme(theme: Theme) {
+    document.documentElement.classList.toggle("dark", theme === "dark");
+}
+
+export function ThemeProvider({ children }: { children: React.ReactNode }) {
+    const [theme, setThemeState] = React.useState<Theme>(currentTheme);
+
+    const setTheme = React.useCallback((newTheme: Theme) => {
+        setThemeState(newTheme);
+        localStorage.setItem("theme", newTheme);
+        applyTheme(newTheme);
     }, []);
 
     const toggleTheme = React.useCallback(() => {
         setThemeState((prev) => {
             const next = prev === "light" ? "dark" : "light";
             localStorage.setItem("theme", next);
-            document.documentElement.classList.toggle("dark", next === "dark");
+            applyTheme(next);
             return next;
         });
-    }, []);
-
-    const setTheme = React.useCallback((newTheme: Theme) => {
-        setThemeState(newTheme);
-        localStorage.setItem("theme", newTheme);
-        document.documentElement.classList.toggle("dark", newTheme === "dark");
     }, []);
 
     return (
@@ -53,3 +51,5 @@ export function useTheme() {
     }
     return context;
 }
+
+export const themeInitScript = `(function(){try{var t=localStorage.getItem("theme");var d=t==="dark"||(!t&&window.matchMedia("(prefers-color-scheme: dark)").matches);document.documentElement.classList.toggle("dark",d)}catch(e){}})()`

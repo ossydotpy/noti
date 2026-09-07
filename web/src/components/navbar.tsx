@@ -7,7 +7,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { MenuToggleIcon } from "@/components/ui/menu-toggle-icon";
 import { useScroll } from "@/hooks/use-scroll";
-import { ThemeProvider, useTheme } from "@/hooks/use-theme";
+import { useTheme } from "@/hooks/use-theme";
 import { isDashboardPath } from "@/lib/routes";
 import { useWorkspaces } from "@/hooks/use-workspaces";
 import {
@@ -21,11 +21,7 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 export default function Navbar() {
-    return (
-        <ThemeProvider>
-            <NavbarContent />
-        </ThemeProvider>
-    );
+    return <NavbarContent />;
 }
 
 function DashboardLink({
