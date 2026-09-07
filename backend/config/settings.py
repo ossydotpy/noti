@@ -13,10 +13,11 @@ from pathlib import Path
 import environ
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
+BACKEND_DIR = Path(__file__).resolve().parent.parent
 
 env = environ.Env()
 
-env_file = BASE_DIR / ".env"
+env_file = BACKEND_DIR / ".env"
 if env_file.exists():
     env.read_env(env_file)
 
@@ -213,8 +214,15 @@ SIMPLE_JWT = {
 
 # CORS (the web frontend calls this API directly from the browser)
 CORS_ALLOWED_ORIGINS = env.list(
-    "CORS_ALLOWED_ORIGINS", default=["http://localhost:3000"]
+    "CORS_ALLOWED_ORIGINS", default=[]
 )
+
+
+CORS_ALLOW_HEADERS = [
+    "authorization",
+    "content-type",
+    "x-workspace-id",
+]
 
 SPECTACULAR_SETTINGS = {
     "TITLE": "noti API",
