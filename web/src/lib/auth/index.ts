@@ -1,5 +1,6 @@
 import { useSyncExternalStore } from "react"
 import { api, ApiError } from "./authFetch"
+import { purgeQueryCache } from "@/lib/query"
 import { clearTokens, getTokens, setTokens } from "./tokens"
 
 export interface User {
@@ -65,19 +66,23 @@ async function hydrate(): Promise<void> {
     readyResolve?.()
     return
   }
+  // Optimistic boot: render the authenticated shell immediately from the
+  // persisted cache and verify in the background. A dead token is cleaned up
+  // by the verify call below (authFetch already attempted a refresh first) or
+  // by the first failing query.
+  setState({ status: "authenticated", user: state.user })
+  readyResolve?.()
   try {
     const user = await api.get<User>("/v1/auth/me/")
-    setState({ status: "authenticated", user })
+    setState({ user })
   } catch (error) {
     if (error instanceof ApiError && error.status === 401) {
-      setState({ status: "unauthenticated", user: null })
       clearTokens()
-    } else {
-      // Offline / backend down: treat existing token as still valid.
-      setState({ status: access ? "authenticated" : "unauthenticated", user: null })
+      purgeQueryCache()
+      setState({ status: "unauthenticated", user: null })
     }
+    // Offline / 5xx: keep the optimistic session.
   }
-  readyResolve?.()
 }
 
 if (typeof window !== "undefined") {
@@ -110,6 +115,7 @@ export const auth: AuthState = {
       // Best-effort: always clear local state.
     }
     clearTokens()
+    purgeQueryCache()
     setState({ status: "unauthenticated", user: null })
   },
 }

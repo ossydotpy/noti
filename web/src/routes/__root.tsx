@@ -5,11 +5,12 @@ import {
   Scripts,
   createRootRouteWithContext,
 } from "@tanstack/react-router"
-import { QueryClientProvider } from "@tanstack/react-query"
+import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client"
 import { Toaster } from "sonner"
 
 import type { RouterContext } from "@/router"
 import { ThemeProvider, themeInitScript } from "@/hooks/use-theme"
+import { queryPersistOptions } from "@/lib/query"
 import "@/styles.css"
 
 export const Route = createRootRouteWithContext<RouterContext>()({
@@ -29,12 +30,15 @@ function RootComponent() {
 
   return (
     <ThemeProvider>
-      <QueryClientProvider client={queryClient}>
+      <PersistQueryClientProvider
+        client={queryClient}
+        persistOptions={queryPersistOptions}
+      >
         <RootDocument>
           <Outlet />
           <Toaster richColors position="top-right" />
         </RootDocument>
-      </QueryClientProvider>
+      </PersistQueryClientProvider>
     </ThemeProvider>
   )
 }

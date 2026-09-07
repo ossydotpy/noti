@@ -1,4 +1,5 @@
 import { clearTokens, getAccessToken, getTokens, setTokens } from "./tokens"
+import { purgeQueryCache } from "@/lib/query"
 
 export const API_URL = (import.meta.env.VITE_API_URL ?? "http://localhost:8000/api").replace(
   /\/$/,
@@ -60,7 +61,10 @@ async function refreshTokens(): Promise<boolean> {
   })
 
   if (!response.ok) {
-    if (response.status === 401) clearTokens()
+    if (response.status === 401) {
+      clearTokens()
+      purgeQueryCache()
+    }
     return false
   }
 
