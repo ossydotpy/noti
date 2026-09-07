@@ -1,0 +1,9 @@
+node_modules
+dist
+.vinxi
+.output
+.tanstack
+src/routeTree.gen.ts
+.env
+.env.local
+*.tsbuildinfo

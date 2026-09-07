@@ -22,22 +22,25 @@ Browser (web) ──HTTPS──▶ Django API (backend) ──▶ Postgres / Red
 
 ## Quickstart
 
+Requires: [uv](https://docs.astral.sh/uv/), pnpm, Docker.
+
 ```bash
-# 1. Infra
+# 1. Infra (postgres + redis)
 docker compose up -d
 
 # 2. Backend
 cd backend
-python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
+uv sync
 cp .env.example .env
-python manage.py migrate
-python manage.py runserver        # http://localhost:8000
+uv run python manage.py migrate
+uv run python manage.py runserver        # http://localhost:8000
+uv run python manage.py test --settings=config.test_settings   # run tests
 
 # 3. Web (separate terminal)
 cd web
 pnpm install
-pnpm dev                          # http://localhost:3000
+pnpm dev                                 # http://localhost:3000
+pnpm build                               # typegen + production build
 ```
 
 See [`docs/PLAN.md`](./docs/PLAN.md) for the port plan and status.
