@@ -5,6 +5,7 @@ import {
   Scripts,
   createRootRouteWithContext,
 } from "@tanstack/react-router"
+import { QueryClientProvider } from "@tanstack/react-query"
 import { Toaster } from "sonner"
 
 import type { RouterContext } from "@/router"
@@ -24,12 +25,16 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 })
 
 function RootComponent() {
+  const { queryClient } = Route.useRouteContext()
+
   return (
     <ThemeProvider>
-      <RootDocument>
-        <Outlet />
-        <Toaster richColors position="top-right" />
-      </RootDocument>
+      <QueryClientProvider client={queryClient}>
+        <RootDocument>
+          <Outlet />
+          <Toaster richColors position="top-right" />
+        </RootDocument>
+      </QueryClientProvider>
     </ThemeProvider>
   )
 }
