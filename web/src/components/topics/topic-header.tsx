@@ -56,7 +56,7 @@ export function TopicHeader({
     >
       {/* Back Link */}
       <motion.div variants={itemVariants}>
-        <Link to={`/${wsSlug}/topics`}>
+        <Link to="/$wsSlug/topics" params={{ wsSlug }}>
           <Button 
             variant="ghost" 
             className="-ml-2 px-2 h-10 text-muted-foreground hover:text-foreground"

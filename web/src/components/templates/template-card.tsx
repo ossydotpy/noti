@@ -74,7 +74,11 @@ export function TemplateCard({
         ease: [0.25, 0.1, 0.25, 1],
       }}
     >
-      <Link to={`/${wsSlug}/templates/${template.id}`} className="block group">
+      <Link
+        to="/$wsSlug/templates/$templateId"
+        params={{ wsSlug, templateId: template.id }}
+        className="block group"
+      >
         <motion.article
           whileHover={{ y: -2 }}
           transition={{ duration: 0.15, ease: "easeOut" }}

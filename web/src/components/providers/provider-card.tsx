@@ -59,8 +59,8 @@ export function ProviderCard({ provider, className, isSystem, disableLink }: Pro
       if (err.status >= 500) {
         return "Server error, try again later";
       }
-      return err.data && typeof err.data === 'object' && 'detail' in err.data 
-        ? String(err.data.detail) 
+      return err.payload && typeof err.payload === "object" && "detail" in err.payload
+        ? String((err.payload as { detail: unknown }).detail)
         : "Failed to disconnect provider";
     }
     if (err instanceof Error) {

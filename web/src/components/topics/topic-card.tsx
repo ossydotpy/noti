@@ -44,7 +44,11 @@ export function TopicCard({
         ease: [0.25, 0.1, 0.25, 1],
       }}
     >
-      <Link to={`/${wsSlug}/topics/${topic.id}`} className="block group">
+      <Link
+        to="/$wsSlug/topics/$topicId"
+        params={{ wsSlug, topicId: topic.id }}
+        className="block group"
+      >
         <motion.article
           whileHover={{ y: -2 }}
           transition={{ duration: 0.15, ease: "easeOut" }}
@@ -87,7 +91,10 @@ export function TopicCard({
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-44">
                 <DropdownMenuItem asChild>
-                  <Link to={`/${wsSlug}/topics/${topic.id}`}>
+                  <Link
+                    to="/$wsSlug/topics/$topicId"
+                    params={{ wsSlug, topicId: topic.id }}
+                  >
                     <PencilSimpleIcon className="mr-2 h-4 w-4" />
                     Edit
                   </Link>

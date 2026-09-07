@@ -1,3 +1,9 @@
+import { ApiError } from "@/lib/auth/authFetch"
+
+export function isBackendError(error: unknown): error is ApiError {
+  return error instanceof ApiError
+}
+
 /**
  * Recursively pull the first human-readable message out of a DRF-style
  * validation payload (e.g. `{name: ["..."], non_field_errors: [...]}`).

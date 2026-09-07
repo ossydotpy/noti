@@ -204,8 +204,8 @@ export function SMSPreview({
       {/* Message Bubble Area */}
       <div className="flex-1 px-4 py-5 flex flex-col justify-end min-h-[200px] z-10 w-full">
         <div className="flex justify-end mb-1 w-full">
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.9, originBottom: true, originRight: true, y: 10 }}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, transformOrigin: "bottom right", y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ type: "spring", stiffness: 450, damping: 30, delay }}
             className="group relative max-w-[85%] pr-1 w-fit ml-auto"

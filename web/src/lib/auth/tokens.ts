@@ -29,3 +29,7 @@ export function clearTokens(): void {
   window.localStorage.removeItem(ACCESS_KEY)
   window.localStorage.removeItem(REFRESH_KEY)
 }
+
+export function getAccessToken(): string | null {
+  return getTokens().access
+}

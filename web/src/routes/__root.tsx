@@ -2,6 +2,7 @@ import type { ReactNode } from "react"
 import {
   HeadContent,
   Outlet,
+  Scripts,
   createRootRouteWithContext,
 } from "@tanstack/react-router"
 import { Toaster } from "sonner"

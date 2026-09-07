@@ -99,17 +99,22 @@ async function request<T>(path: string, init: RequestInit = {}, retried = false)
   return (await response.json()) as T
 }
 
-function jsonBody(body: unknown): RequestInit {
-  return { method: "POST", body: JSON.stringify(body) }
+function jsonBody(body: unknown, init?: RequestInit): RequestInit {
+  return { ...init, method: "POST", body: JSON.stringify(body) }
 }
 
 export const api = {
   get: <T>(path: string, init?: RequestInit) => request<T>(path, init),
-  post: <T>(path: string, body?: unknown) => request<T>(path, jsonBody(body)),
-  put: <T>(path: string, body?: unknown) =>
-    request<T>(path, { method: "PUT", body: JSON.stringify(body) }),
-  patch: <T>(path: string, body?: unknown) =>
-    request<T>(path, { method: "PATCH", body: JSON.stringify(body) }),
-  delete: <T>(path: string, body?: unknown) =>
-    request<T>(path, { method: "DELETE", body: body ? JSON.stringify(body) : undefined }),
+  post: <T>(path: string, body?: unknown, init?: RequestInit) =>
+    request<T>(path, jsonBody(body, init)),
+  put: <T>(path: string, body?: unknown, init?: RequestInit) =>
+    request<T>(path, { ...init, method: "PUT", body: JSON.stringify(body) }),
+  patch: <T>(path: string, body?: unknown, init?: RequestInit) =>
+    request<T>(path, { ...init, method: "PATCH", body: JSON.stringify(body) }),
+  delete: <T>(path: string, body?: unknown, init?: RequestInit) =>
+    request<T>(path, {
+      ...init,
+      method: "DELETE",
+      body: body ? JSON.stringify(body) : undefined,
+    }),
 }
