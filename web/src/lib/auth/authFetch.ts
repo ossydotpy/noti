@@ -50,6 +50,14 @@ export class ApiError extends Error {
 
 let refreshPromise: Promise<boolean> | null = null
 
+type SessionExpiredHandler = () => void
+let sessionExpiredHandler: SessionExpiredHandler | null = null
+
+/** Registered by lib/auth — force-signs-out and redirects to /login. */
+export function onSessionExpired(handler: SessionExpiredHandler) {
+  sessionExpiredHandler = handler
+}
+
 async function refreshTokens(): Promise<boolean> {
   const { refresh } = getTokens()
   if (!refresh) return false
@@ -98,6 +106,10 @@ async function request<T>(path: string, init: RequestInit = {}, retried = false)
   if (response.status === 401 && !retried && token) {
     const refreshed = await ensureFreshAccessToken()
     if (refreshed) return request<T>(path, init, true)
+  }
+
+  if (response.status === 401) {
+    sessionExpiredHandler?.()
   }
 
   if (!response.ok) {

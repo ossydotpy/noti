@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from "react"
-import { api, ApiError } from "./authFetch"
+import { api, ApiError, onSessionExpired } from "./authFetch"
 import { purgeQueryCache } from "@/lib/query"
 import { clearTokens, getTokens, setTokens } from "./tokens"
 
@@ -77,9 +77,7 @@ async function hydrate(): Promise<void> {
     setState({ user })
   } catch (error) {
     if (error instanceof ApiError && error.status === 401) {
-      clearTokens()
-      purgeQueryCache()
-      setState({ status: "unauthenticated", user: null })
+      forceSignOut()
     }
     // Offline / 5xx: keep the optimistic session.
   }
@@ -123,6 +121,23 @@ export const auth: AuthState = {
 function getSnapshot() {
   return state
 }
+
+function forceSignOut() {
+  clearTokens()
+  purgeQueryCache()
+  setState({ status: "unauthenticated", user: null })
+  if (
+    typeof window !== "undefined" &&
+    !window.location.pathname.startsWith("/login")
+  ) {
+    const next = encodeURIComponent(
+      window.location.pathname + window.location.search
+    )
+    window.location.assign(`/login?redirect=${next}`)
+  }
+}
+
+onSessionExpired(forceSignOut)
 
 function subscribe(listener: Listener) {
   listeners.add(listener)
