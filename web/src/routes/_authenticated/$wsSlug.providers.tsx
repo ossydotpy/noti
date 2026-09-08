@@ -4,9 +4,10 @@ import {
 } from "@/hooks/use-providers";
 import { ChannelSection } from "@/components/providers/channel-section";
 import { Skeleton } from "@/components/ui/skeleton";
-import { motion } from "motion/react";
 import { Outlet, createFileRoute, useMatchRoute } from "@tanstack/react-router";
 import type { Provider, ProviderChannel, ProviderType } from "@/lib/types";
+import { CheckCircleIcon, PlusIcon } from "@phosphor-icons/react";
+import { Button } from "@/components/ui/button";
 
 const CHANNELS: ProviderChannel[] = ["sms", "push", "in_app"];
 
@@ -33,6 +34,10 @@ function ProvidersPage() {
   }
 
   const isLoading = isLoadingProviders || isLoadingTypes;
+  const configuredProviders = providers?.length ?? 0;
+  const availableProviders = types?.filter(
+    (type) => !providers?.some((provider) => provider.provider_type === type.key)
+  ).length ?? 0;
 
   const groupedProviders = CHANNELS.reduce(
     (acc, channel) => {
@@ -71,26 +76,44 @@ function ProvidersPage() {
   }
 
   return (
-    <div className="space-y-10 pb-20">
-      {/* Page header */}
-      <header className="space-y-1">
-        <h1 className="text-lg font-semibold text-foreground tracking-tight">
-          Providers
-        </h1>
-        <p className="text-sm text-muted-foreground">
-          Connect and manage your notification delivery services across channels.
-        </p>
+    <div className="mx-auto max-w-7xl space-y-10 pb-20">
+      <header className="relative overflow-hidden rounded-3xl border border-border bg-card px-6 py-7 shadow-[0_18px_50px_-35px_hsl(var(--foreground)/0.35)] sm:px-8">
+        <div className="absolute -right-16 -top-24 size-64 rounded-full bg-primary/10 blur-3xl" />
+        <div className="relative flex flex-col gap-7 lg:flex-row lg:items-end lg:justify-between">
+          <div className="max-w-2xl space-y-4">
+            <div className="space-y-2">
+              <h1 className="text-3xl font-semibold tracking-[-0.03em] text-foreground sm:text-4xl">
+                Integrations
+              </h1>
+              <p className="max-w-xl text-sm leading-6 text-muted-foreground">
+                Connect the services that deliver your notifications. Configure a provider once, then route messages by channel.
+              </p>
+            </div>
+          </div>
+          <Button asChild className="h-11 shrink-0 rounded-xl px-4 shadow-sm">
+            <a href="#available-integrations">
+              <PlusIcon className="mr-2 size-4" weight="bold" />
+              Add integration
+            </a>
+          </Button>
+        </div>
+        <div className="relative mt-7 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-border/70 pt-5 text-sm">
+          <div className="flex items-center gap-2">
+            <CheckCircleIcon className="size-4 text-emerald-500" weight="fill" />
+            <span className="font-medium text-foreground tabular-nums">{configuredProviders}</span>
+            <span className="text-muted-foreground">connected</span>
+          </div>
+          <div className="hidden h-4 w-px bg-border sm:block" />
+          <div>
+            <span className="font-medium text-foreground tabular-nums">{availableProviders}</span>{" "}
+            <span className="text-muted-foreground">available to connect</span>
+          </div>
+        </div>
       </header>
 
-      {/* Channel sections */}
-      <div className="space-y-12">
-        {CHANNELS.map((channel, index) => (
-          <motion.div
-            key={channel}
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.06 * (index + 1), type: "spring", stiffness: 400, damping: 30 }}
-          >
+      <div id="available-integrations" className="space-y-12">
+        {CHANNELS.map((channel) => (
+          <div key={channel}>
             {isLoading ? (
               <div className="space-y-5">
                 <div className="flex items-center gap-2.5">
@@ -110,7 +133,7 @@ function ProvidersPage() {
                 availableTypes={groupedTypes[channel]}
               />
             )}
-          </motion.div>
+          </div>
         ))}
       </div>
     </div>

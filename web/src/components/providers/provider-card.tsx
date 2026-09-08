@@ -1,7 +1,7 @@
 
 import { cn } from "@/lib/utils";
 import { type Provider, useDisconnectProvider } from "@/hooks/use-providers";
-import { getProviderMeta, CHANNEL_META, getProviderIconUrl, getProviderDocsUrl } from "@/lib/provider-meta";
+import { getProviderMeta, CHANNEL_META } from "@/lib/provider-meta";
 import { isBackendError } from "@/lib/api-utils";
 import { ArrowUpRightIcon, TrashIcon, XIcon, CheckIcon } from "@phosphor-icons/react";
 import { Link } from "@tanstack/react-router";
@@ -72,10 +72,9 @@ export function ProviderCard({ provider, className, isSystem, disableLink }: Pro
   const cardContent = (
     <div
       className={cn(
-        "group relative flex flex-col rounded-2xl p-5 min-h-[140px] transition-all duration-300 overflow-hidden border",
-        "bg-card border-border",
-        "dark:border-white/[0.06] dark:bg-white/[0.02]",
-        !disableLink && "hover:shadow-lg hover:border-primary/30",
+        "group relative flex min-h-[164px] flex-col overflow-hidden rounded-2xl border p-5 transition-[border-color,box-shadow,transform] duration-200",
+        "border-border bg-card shadow-sm",
+        !disableLink && "hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5",
         className
       )}
     >
@@ -84,11 +83,15 @@ export function ProviderCard({ provider, className, isSystem, disableLink }: Pro
 
       <div className="flex items-start justify-between relative z-10">
         <div className="flex items-center gap-3">
+          <div
+            className="size-11 shrink-0 overflow-hidden rounded-xl p-1.5"
+            dangerouslySetInnerHTML={{ __html: meta.logo }}
+          />
           <div className="space-y-0.5">
-            <h3 className="text-sm font-semibold text-foreground tracking-tight group-hover:text-primary transition-colors leading-tight">
+            <h3 className="text-sm font-semibold leading-tight tracking-tight text-foreground transition-colors group-hover:text-primary">
               {provider.name}
             </h3>
-            <p className="text-[11px] text-muted-foreground/70 font-mono leading-none">
+            <p className="font-mono text-[11px] leading-none text-muted-foreground">
               {meta.key}
             </p>
           </div>
@@ -129,8 +132,7 @@ export function ProviderCard({ provider, className, isSystem, disableLink }: Pro
                 onClick={handleDelete}
                 className={cn(
                   "flex size-7 items-center justify-center rounded-full transition-all duration-300 border",
-                  "bg-background border-border/60 text-muted-foreground/40",
-                  "dark:bg-white/[0.03] dark:border-white/[0.08]",
+                   "border-border bg-background text-muted-foreground",
                   "hover:text-destructive hover:border-destructive/30 hover:bg-destructive/5"
                 )}
                 title="Disconnect provider"
@@ -143,8 +145,7 @@ export function ProviderCard({ provider, className, isSystem, disableLink }: Pro
           {!disableLink && (
             <div className={cn(
               "flex size-7 items-center justify-center rounded-full transition-all duration-300 border",
-              "bg-background border-border/60 text-muted-foreground/40",
-              "dark:bg-white/[0.03] dark:border-white/[0.08]",
+               "border-border bg-background text-muted-foreground",
               "group-hover:text-primary group-hover:border-primary/30"
             )}>
               <ArrowUpRightIcon className="size-3" />
@@ -187,7 +188,7 @@ export function ProviderCard({ provider, className, isSystem, disableLink }: Pro
           </span>
           <span className={cn(
             "inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] font-medium",
-            "bg-muted/60 text-muted-foreground/80 dark:bg-white/[0.05]"
+            "border border-border bg-muted text-muted-foreground"
           )}>
             <span className={cn("size-1 rounded-full", channelMeta.dotColor)} />
             {channelMeta.label}

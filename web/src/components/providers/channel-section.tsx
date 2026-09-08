@@ -3,6 +3,7 @@ import { type Provider, type ProviderType, type ProviderChannel } from "@/hooks/
 import { CHANNEL_META } from "@/lib/provider-meta";
 import { ProviderCard } from "./provider-card";
 import { AvailableProviderCard } from "./available-provider-card";
+import { ArrowUpRightIcon } from "@phosphor-icons/react";
 
 interface ChannelSectionProps {
   channel: ProviderChannel;
@@ -16,16 +17,18 @@ export function ChannelSection({ channel, providers, availableTypes, className }
   const hasContent = providers.length > 0 || availableTypes.length > 0;
 
   return (
-    <div className={cn("space-y-5", className)}>
-      {/* Clean section header — no icon container */}
-      <div className="flex items-center gap-2.5">
-        <span className={cn("size-2 rounded-full", meta.dotColor)} />
-        <h2 className="text-sm font-semibold text-foreground tracking-tight">
-          {meta.label}
-        </h2>
-        <span className="text-xs text-muted-foreground/50 tabular-nums">
-          {providers.length} configured
-        </span>
+    <section className={cn("space-y-5", className)}>
+      <div className="flex items-end justify-between gap-4 border-b border-border/70 pb-3">
+        <div className="flex items-center gap-3">
+          <span className={cn("size-2.5 rounded-full shadow-sm", meta.dotColor)} />
+          <div>
+            <h2 className="text-base font-semibold tracking-tight text-foreground">{meta.label}</h2>
+            <p className="mt-0.5 text-xs text-muted-foreground">
+              {providers.length > 0 ? `${providers.length} connected` : "Choose a delivery service"}
+            </p>
+          </div>
+        </div>
+        <ArrowUpRightIcon className="hidden size-4 text-muted-foreground/50 sm:block" />
       </div>
 
       {/* Cards grid */}
@@ -49,12 +52,12 @@ export function ChannelSection({ channel, providers, availableTypes, className }
 
       {/* Empty state */}
       {!hasContent && (
-        <div className="py-10 flex flex-col items-center justify-center rounded-2xl border border-dashed border-border/40">
-          <p className="text-xs text-muted-foreground/40 font-medium">
+        <div className="flex min-h-28 items-center justify-center rounded-2xl border border-border/70 bg-muted/20 px-4 shadow-sm">
+          <p className="text-xs font-medium text-muted-foreground">
             No providers available for this channel
           </p>
         </div>
       )}
-    </div>
+    </section>
   );
 }

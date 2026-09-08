@@ -5,7 +5,6 @@ import { getProviderMeta } from "@/lib/provider-meta";
 import { ArrowRightIcon, BookOpenIcon } from "@phosphor-icons/react";
 import { Link } from "@tanstack/react-router";
 import { useParams } from "@tanstack/react-router";
-import { motion } from "motion/react";
 
 interface AvailableProviderCardProps {
   providerType: ProviderType;
@@ -18,33 +17,31 @@ export function AvailableProviderCard({ providerType, className }: AvailableProv
   const setupUrl = `/${wsSlug}/providers/new?type=${providerType.key}`;
   const meta = getProviderMeta(providerType.key);
 
-  // Use backend icon_url if available, fallback to hardcoded SVG
   const iconUrl = providerType.icon_url;
-  const hasIconUrl = iconUrl && iconUrl.startsWith("/icons/");
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ type: "spring", stiffness: 400, damping: 30 }}
-    >
+    <div>
       <Link to={setupUrl} className="block">
         <div
           className={cn(
-            "group relative flex flex-col rounded-2xl p-5 min-h-[140px] transition-all duration-300 overflow-hidden",
-            "border border-dashed border-border/70",
-            "dark:border-white/6",
-            "hover:border-solid hover:border-primary/40 hover:shadow-md hover:bg-card/50",
-            "bg-transparent",
+            "group relative flex min-h-[164px] flex-col overflow-hidden rounded-2xl border border-border/80 bg-muted/20 p-5 shadow-sm transition-[border-color,box-shadow,transform,background-color] duration-200",
+            "hover:-translate-y-0.5 hover:border-primary/50 hover:bg-card hover:shadow-lg hover:shadow-primary/5",
             className
           )}
         >
-          <div className="flex items-start gap-3 relative z-10">
+          <div className="relative z-10 flex items-start gap-3">
+            <div className="size-11 shrink-0 overflow-hidden rounded-xl p-1.5">
+              {iconUrl ? (
+                <img src={iconUrl} alt="" className="size-full object-contain" />
+              ) : (
+                <div dangerouslySetInnerHTML={{ __html: meta.logo }} />
+              )}
+            </div>
             <div className="space-y-1 min-w-0">
-              <h3 className="text-sm font-semibold text-foreground/70 tracking-tight group-hover:text-primary transition-colors leading-tight">
+              <h3 className="text-sm font-semibold leading-tight tracking-tight text-foreground transition-colors group-hover:text-primary">
                 {providerType.name}
               </h3>
-              <p className="text-[11px] text-muted-foreground/50 leading-snug line-clamp-2">
+              <p className="line-clamp-2 text-[11px] leading-snug text-muted-foreground">
                 {meta.description}
               </p>
             </div>
@@ -60,21 +57,21 @@ export function AvailableProviderCard({ providerType, className }: AvailableProv
                   e.stopPropagation();
                   window.open(providerType.docs_url, '_blank', 'noopener,noreferrer');
                 }}
-                className="flex items-center gap-1 text-[11px] text-muted-foreground/40 hover:text-primary transition-colors"
+                className="flex min-h-10 items-center gap-1 text-[11px] text-muted-foreground transition-colors hover:text-primary"
               >
                 <BookOpenIcon className="size-3" />
                 <span>Docs</span>
               </button>
             )}
             <div className="flex items-center gap-1.5 ml-auto">
-              <span className="text-[11px] font-medium text-muted-foreground/50 group-hover:text-primary transition-colors">
+              <span className="text-[11px] font-medium text-muted-foreground transition-colors group-hover:text-primary">
                 Connect
               </span>
-              <ArrowRightIcon className="size-3 text-muted-foreground/30 group-hover:text-primary group-hover:translate-x-0.5 transition-all" />
+              <ArrowRightIcon className="size-3 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-primary" />
             </div>
           </div>
         </div>
       </Link>
-    </motion.div>
+    </div>
   );
 }
