@@ -5,7 +5,7 @@ import {
 import { ChannelSection } from "@/components/providers/channel-section";
 import { Skeleton } from "@/components/ui/skeleton";
 import { motion } from "motion/react";
-import { createFileRoute } from "@tanstack/react-router";
+import { Outlet, createFileRoute, useMatchRoute } from "@tanstack/react-router";
 import type { Provider, ProviderChannel, ProviderType } from "@/lib/types";
 
 const CHANNELS: ProviderChannel[] = ["sms", "push", "in_app"];
@@ -15,8 +15,22 @@ export const Route = createFileRoute("/_authenticated/$wsSlug/providers")({
 });
 
 function ProvidersPage() {
+  const { wsSlug } = Route.useParams();
+  const matchRoute = useMatchRoute();
   const { data: providers, isLoading: isLoadingProviders } = useWorkspaceProviders();
   const { data: types, isLoading: isLoadingTypes } = useProviderTypes();
+
+  const isChildRoute =
+    matchRoute({ to: "/$wsSlug/providers/new", params: { wsSlug }, fuzzy: false }) ||
+    matchRoute({
+      to: "/$wsSlug/providers/$providerId",
+      params: { wsSlug, providerId: "" },
+      fuzzy: false,
+    });
+
+  if (isChildRoute) {
+    return <Outlet />;
+  }
 
   const isLoading = isLoadingProviders || isLoadingTypes;
 

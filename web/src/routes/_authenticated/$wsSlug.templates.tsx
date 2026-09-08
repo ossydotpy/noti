@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { Link, Outlet, createFileRoute, useMatchRoute } from "@tanstack/react-router";
 import { motion, type Variants } from "motion/react";
 import {
   useTemplates,
@@ -45,7 +45,7 @@ export const Route = createFileRoute("/_authenticated/$wsSlug/templates")({
 
 function TemplatesPage() {
   const { wsSlug } = Route.useParams();
-
+  const matchRoute = useMatchRoute();
   const { data: templates, isLoading } = useTemplates();
   const deleteTemplate = useDeleteTemplate();
 
@@ -53,6 +53,18 @@ function TemplatesPage() {
   const [channelFilter, setChannelFilter] = useState<ChannelFilter>("all");
   const [templateToEdit, setTemplateToEdit] = useState<Template | null>(null);
   const [templateToDelete, setTemplateToDelete] = useState<Template | null>(null);
+
+  const isChildRoute =
+    matchRoute({ to: "/$wsSlug/templates/new", params: { wsSlug }, fuzzy: false }) ||
+    matchRoute({
+      to: "/$wsSlug/templates/$templateId",
+      params: { wsSlug, templateId: "" },
+      fuzzy: false,
+    });
+
+  if (isChildRoute) {
+    return <Outlet />;
+  }
 
   // Filter templates
   const filteredTemplates = templates?.filter((template) => {

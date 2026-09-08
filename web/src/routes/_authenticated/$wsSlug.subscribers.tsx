@@ -1,6 +1,6 @@
 import { motion, type Variants } from "motion/react";
 import { SubscriberList } from "@/components/subscribers/subscriber-list";
-import { createFileRoute } from "@tanstack/react-router";
+import { Outlet, createFileRoute, useMatchRoute } from "@tanstack/react-router";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -27,6 +27,13 @@ export const Route = createFileRoute("/_authenticated/$wsSlug/subscribers")({
 });
 
 function SubscribersPage() {
+  const { wsSlug } = Route.useParams();
+  const matchRoute = useMatchRoute();
+
+  if (matchRoute({ to: "/$wsSlug/subscribers/$subscriberId", params: { wsSlug, subscriberId: "" }, fuzzy: false })) {
+    return <Outlet />;
+  }
+
   return (
     <motion.div
       variants={containerVariants}

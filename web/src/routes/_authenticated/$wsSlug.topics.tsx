@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { Outlet, createFileRoute, useMatchRoute, useNavigate } from "@tanstack/react-router";
 import { motion, type Variants } from "motion/react";
 import {
   useTopics,
@@ -45,7 +45,7 @@ export const Route = createFileRoute("/_authenticated/$wsSlug/topics")({
 function TopicsPage() {
   const { wsSlug } = Route.useParams();
   const navigate = useNavigate();
-
+  const matchRoute = useMatchRoute();
   const { data: topics, isLoading } = useTopics();
   const createTopic = useCreateTopic();
   const deleteTopic = useDeleteTopic();
@@ -54,6 +54,10 @@ function TopicsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [topicToDelete, setTopicToDelete] = useState<Topic | null>(null);
+
+  if (matchRoute({ to: "/$wsSlug/topics/$topicId", params: { wsSlug, topicId: "" }, fuzzy: false })) {
+    return <Outlet />;
+  }
 
   const filteredTopics = topics?.filter(
     (topic) =>
