@@ -1,6 +1,6 @@
 import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
-import { PlusIcon } from "@phosphor-icons/react";
+import { BellIcon, MagnifyingGlassIcon, PlusIcon } from "@phosphor-icons/react";
 
 interface EmptyStateProps {
   type: "no-topics" | "no-results";
@@ -24,7 +24,7 @@ export function EmptyState({
         className="flex flex-col items-center justify-center py-20 text-center"
       >
         <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-muted/50 mb-6">
-          <span className="text-3xl text-muted-foreground">🔍</span>
+          <MagnifyingGlassIcon className="h-10 w-10 text-muted-foreground" />
         </div>
         <h3 className="text-xl font-bold tracking-tight mb-2">No topics found</h3>
         <p className="text-sm text-muted-foreground max-w-sm mb-6">
@@ -49,7 +49,7 @@ export function EmptyState({
       className="flex flex-col items-center justify-center py-20 text-center"
     >
       <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-muted/50 mb-6">
-        <span className="text-3xl text-muted-foreground">🔔</span>
+        <BellIcon className="h-10 w-10 text-muted-foreground" weight="duotone" />
       </div>
       <h3 className="text-xl font-bold tracking-tight mb-2">No topics yet</h3>
       <p className="text-sm text-muted-foreground max-w-sm mb-6">

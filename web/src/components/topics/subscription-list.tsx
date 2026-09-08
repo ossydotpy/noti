@@ -14,7 +14,7 @@ import { InfoCard, InfoCardHeader, InfoCardContent } from "@/components/ui/info-
 import { formatDistanceToNow } from "date-fns";
 import type { TopicSubscription } from "@/hooks/use-topics";
 import { cn } from "@/lib/utils";
-import { TrashIcon } from "@phosphor-icons/react";
+import { TrashIcon, UserIcon } from "@phosphor-icons/react";
 
 interface SubscriptionListProps {
   subscriptions: TopicSubscription[] | undefined;
@@ -70,7 +70,7 @@ export function SubscriptionList({
         <InfoCardContent>
           <div className="flex flex-col items-center justify-center py-12 text-center">
             <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-muted/50 mb-4">
-              <span className="text-2xl text-muted-foreground">👤</span>
+              <UserIcon className="h-8 w-8 text-muted-foreground" weight="duotone" />
             </div>
             <h4 className="text-base font-semibold mb-1">No active subscriptions</h4>
             <p className="text-sm text-muted-foreground">

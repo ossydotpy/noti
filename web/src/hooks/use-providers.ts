@@ -35,11 +35,15 @@ export function useWorkspaceProviders() {
 }
 
 export function useProviderTypes() {
+  const { workspaceId } = useActiveWorkspaceId();
+
   return useQuery({
     queryKey: providerKeys.availableTypes(),
     queryFn: async () => {
       try {
-        const data = await api.get<unknown>(`/v1/dashboard/providers/?type=available-types`);
+        const data = await api.get<unknown>("/v1/dashboard/providers/available_types/", {
+          headers: { "X-Workspace-ID": workspaceId as string },
+        });
         return (Array.isArray(data)
           ? data
           : (data as { results?: ProviderType[] }).results || []) as ProviderType[];
@@ -49,6 +53,7 @@ export function useProviderTypes() {
     },
     staleTime: STALE_TIME_TYPES,
     gcTime: GC_TIME_TYPES,
+    enabled: !!workspaceId,
   });
 }
 
