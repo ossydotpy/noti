@@ -1,4 +1,3 @@
-import { ArrowUpRightIcon } from "@phosphor-icons/react";
 import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 
@@ -7,7 +6,6 @@ type StatCardTone = "info" | "success" | "warning" | "danger" | "muted";
 interface StatCardRow {
     label: string;
     value: string | number;
-    ratio?: string;
     tone?: StatCardTone;
 }
 
@@ -44,26 +42,26 @@ export function StatCard({
             animate={{ opacity: 1, y: 0 }}
             transition={{ type: "spring", stiffness: 400, damping: 30 }}
             className={cn(
-                "relative flex flex-col rounded-3xl p-6 min-h-[214px] transition-all duration-300 overflow-hidden border group",
+                "relative flex flex-col rounded-2xl p-6 min-h-[214px] overflow-hidden border transition-[border-color,box-shadow,transform] duration-200 ease-out",
                 isPrimary
                     ? "bg-neutral-950 border-white/10 text-white"
                     : "bg-card border-border",
-                "hover:border-primary/40 hover:shadow-lg",
+                "hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md",
                 className
             )}
         >
-            <div className="absolute inset-0 bg-linear-to-br from-transparent via-transparent to-primary/5 pointer-events-none" />
+            <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-transparent via-transparent to-primary/5" />
 
             <div className="flex items-start justify-between relative z-10">
                 <div className="space-y-2">
                     <h3 className={cn(
-                        "text-xs font-medium uppercase tracking-[0.15em]",
+                        "text-sm font-medium tracking-tight",
                         isPrimary ? "text-white/55" : "text-muted-foreground"
                     )}>
                         {title}
                     </h3>
                     <p className={cn(
-                        "text-4xl leading-none font-medium tracking-tight",
+                        "text-5xl leading-none font-semibold tracking-[-0.04em] tabular-nums",
                         isPrimary ? "text-white" : "text-foreground"
                     )}>
                         {score}
@@ -77,14 +75,6 @@ export function StatCard({
                         </p>
                     ) : null}
                 </div>
-                <div className={cn(
-                    "flex size-8 items-center justify-center rounded-full transition-all duration-300 border",
-                    isPrimary
-                        ? "bg-white/5 border-white/10 text-white/60 group-hover:text-white"
-                        : "bg-background border-border text-muted-foreground group-hover:text-foreground"
-                )}>
-                    <ArrowUpRightIcon className="size-3" />
-                </div>
             </div>
 
             <div className="relative z-10 mt-7 space-y-0.5">
@@ -92,7 +82,7 @@ export function StatCard({
                     <div
                         key={`${row.label}-${index}`}
                         className={cn(
-                            "grid grid-cols-[auto_1fr_auto_auto] items-center gap-x-3 py-3",
+                            "grid grid-cols-[auto_1fr_auto] items-center gap-x-3 py-3",
                             index > 0 ? (isPrimary ? "border-t border-white/10" : "border-t border-border") : ""
                         )}
                     >
@@ -108,15 +98,9 @@ export function StatCard({
                         </span>
                         <span className={cn(
                             "text-sm tabular-nums justify-self-end",
-                            isPrimary ? "text-white/40" : "text-muted-foreground"
-                        )}>
-                            {row.value}
-                        </span>
-                        <span className={cn(
-                            "text-sm tabular-nums justify-self-end",
                             isPrimary ? "text-white" : "text-foreground"
                         )}>
-                            {row.ratio ?? ""}
+                            {row.value}
                         </span>
                     </div>
                 ))}
@@ -133,7 +117,7 @@ export function StatCardFallback({ className }: StatCardFallbackProps) {
     return (
         <div
             className={cn(
-                "relative flex flex-col rounded-3xl p-6 min-h-[214px] overflow-hidden border bg-card border-border",
+                "relative flex flex-col rounded-2xl p-6 min-h-[214px] overflow-hidden border bg-card border-border",
                 className
             )}
         >
@@ -148,13 +132,12 @@ export function StatCardFallback({ className }: StatCardFallbackProps) {
                     <div
                         key={index}
                         className={cn(
-                            "grid grid-cols-[auto_1fr_auto_auto] items-center gap-x-3 py-3",
+                            "grid grid-cols-[auto_1fr_auto] items-center gap-x-3 py-3",
                             index > 0 ? "border-t border-border" : ""
                         )}
                     >
                         <div className="size-2 rounded-full bg-muted animate-pulse" />
                         <div className="h-4 w-20 rounded bg-muted/70 animate-pulse" />
-                        <div className="h-4 w-10 rounded bg-muted/70 animate-pulse justify-self-end" />
                         <div className="h-4 w-12 rounded bg-muted animate-pulse justify-self-end" />
                     </div>
                 ))}

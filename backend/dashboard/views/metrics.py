@@ -5,7 +5,14 @@ from rest_framework.views import APIView
 
 from dashboard.permissions import IsWorkspaceMember, WorkspaceContextPermission
 from dashboard.views.in_app import in_app_stats
-from notifications.models import Delivery, Notification
+from notifications.models import (
+    Delivery,
+    Notification,
+    Provider,
+    Subscriber,
+    Template,
+    Topic,
+)
 
 
 class DashboardMetricsView(APIView):
@@ -42,6 +49,25 @@ class DashboardMetricsView(APIView):
         notif_stats["sms"] = channel_counts.get("sms", 0)
         notif_stats["in_app"] = channel_counts.get("in_app", 0)
 
+        resource_stats = {
+            "subscribers": Subscriber.objects.filter(
+                workspace=workspace, is_active=True
+            ).count(),
+            "providers": Provider.objects.filter(
+                workspace=workspace, is_active=True
+            ).count(),
+            "templates": Template.objects.filter(
+                workspace=workspace, is_active=True
+            ).count(),
+            "topics": Topic.objects.filter(
+                workspace=workspace, is_active=True
+            ).count(),
+        }
+
         return Response(
-            {"notifications": notif_stats, "in_app": in_app_stats(workspace)}
+            {
+                "notifications": notif_stats,
+                "in_app": in_app_stats(workspace),
+                "resources": resource_stats,
+            }
         )

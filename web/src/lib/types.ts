@@ -272,5 +272,65 @@ export interface DashboardNotificationsMetrics {
 
 export interface DashboardMetrics {
   notifications: DashboardNotificationsMetrics;
-  in_app: unknown;
+  in_app: {
+    total: number;
+    unread: number;
+    read: number;
+    archived: number;
+    by_category: Record<string, number>;
+  };
+  resources?: {
+    subscribers: number;
+    providers: number;
+    templates: number;
+    topics: number;
+  };
+}
+
+export interface DashboardRecentNotification {
+  id: string;
+  status: string;
+  channels: string[];
+  priority: string;
+  title: string | null;
+  body: string;
+  subscriber_external_id: string;
+  delivery_count: number;
+  success_count: number;
+  failure_count: number;
+  scheduled_at: string | null;
+  completed_at: string | null;
+  created_at: string;
+}
+
+export interface NotificationComposeTopic {
+  id: string;
+  name: string;
+  slug: string;
+  active_subscribers: number;
+}
+
+export interface NotificationComposeContext {
+  active_subscribers: number;
+  topics: NotificationComposeTopic[];
+  configured_channels: ProviderChannel[];
+}
+
+export interface SendNotificationInput {
+  audience: "quick" | "topic" | "subscriber" | "bulk";
+  subscriber_external_id?: string;
+  subscriber_external_ids?: string[];
+  topic_slug?: string;
+  channels: ProviderChannel[];
+  content: { title?: string; body: string };
+  priority?: "high" | "normal";
+  scheduled_at?: string | null;
+}
+
+export interface SendNotificationResponse {
+  audience: SendNotificationInput["audience"];
+  notifications_created: number;
+  recipients_targeted: number;
+  recipients_missing?: number;
+  channels: ProviderChannel[];
 }

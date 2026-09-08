@@ -3,6 +3,40 @@ from rest_framework import serializers
 from notifications.models import Delivery, Notification
 
 
+class DashboardNotificationSendSerializer(serializers.Serializer):
+    audience = serializers.ChoiceField(choices=["quick", "topic", "subscriber", "bulk"])
+    subscriber_external_id = serializers.CharField(required=False, allow_blank=False)
+    subscriber_external_ids = serializers.ListField(
+        child=serializers.CharField(), required=False, allow_empty=False
+    )
+    topic_slug = serializers.CharField(required=False, allow_blank=False)
+    channels = serializers.ListField(
+        child=serializers.ChoiceField(choices=["push", "sms", "in_app", "email"]),
+        min_length=1,
+    )
+    content = serializers.DictField()
+    priority = serializers.ChoiceField(choices=Notification.PRIORITY_CHOICES, default="normal")
+    fallback = serializers.BooleanField(default=False)
+    scheduled_at = serializers.DateTimeField(required=False, allow_null=True)
+
+    def validate_content(self, value):
+        if not value.get("body"):
+            raise serializers.ValidationError("Message body is required.")
+        if len(value.get("title", "")) > 255:
+            raise serializers.ValidationError("Title must be 255 characters or fewer.")
+        return value
+
+    def validate(self, attrs):
+        audience = attrs["audience"]
+        if audience in {"quick", "subscriber"} and not attrs.get("subscriber_external_id"):
+            raise serializers.ValidationError({"subscriber_external_id": "A subscriber is required."})
+        if audience == "topic" and not attrs.get("topic_slug"):
+            raise serializers.ValidationError({"topic_slug": "A topic is required."})
+        if audience == "bulk" and not attrs.get("subscriber_external_ids"):
+            raise serializers.ValidationError({"subscriber_external_ids": "At least one subscriber is required."})
+        return attrs
+
+
 class DashboardDeliverySerializer(serializers.ModelSerializer):
     class Meta:
         model = Delivery

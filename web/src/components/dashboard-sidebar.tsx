@@ -9,6 +9,7 @@ import {
     UsersThreeIcon,
     TagIcon,
     FileTextIcon,
+    PaperPlaneTiltIcon,
     SignOutIcon,
 } from "@phosphor-icons/react";
 
@@ -33,6 +34,7 @@ import type { Workspace } from "@/lib/types";
 const data = {
     navMain: [
         { title: "Overview", path: "", to: "/$wsSlug/dashboard", icon: SquaresFourIcon },
+        { title: "Send notification", path: "/send", to: "/$wsSlug/send", icon: PaperPlaneTiltIcon },
         { title: "Providers", path: "/providers", to: "/$wsSlug/providers", icon: PlugsConnectedIcon },
         { title: "Topics", path: "/topics", to: "/$wsSlug/topics", icon: TagIcon },
         { title: "Templates", path: "/templates", to: "/$wsSlug/templates", icon: FileTextIcon },
